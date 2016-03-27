@@ -42,9 +42,9 @@
 </div>
 
 <div class="map-container">
-    <md-button class="center"ng-show="populated" ng-click="search()">Center Map using Address</md-button>
+    <md-button class="center"ng-show="address.lat && address.lng" ng-click="search()">Center Map using Address</md-button>
     <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
         <ui-gmap-markers models="markers" coords="'self'" options="'self'"/></ui-gmap-google-map>
     </ui-gmap-google-map>
-    <div class="address-incomplete" layout="row" layout-align="center center" ng-hide="populated"><div>Please populate the address above to locate it on the map</div></div>
+    <div class="address-incomplete" layout="row" layout-align="center center" ng-hide="address.lat && address.lng"><div>Please populate the address above to locate it on the map</div></div>
 </div>

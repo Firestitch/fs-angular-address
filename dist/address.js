@@ -9,35 +9,30 @@
             restrict: 'E',
             scope: {
               options: '=?fsOptions',
-              address: '=?fsAddress'
+              address: '=fsAddress'
             },
 
             link: function($scope, element, attrs, ctrl) {
-                                            
-                $scope.address = $scope.address || {};
+
+                $scope.options.cords = { lat: 43.6379967, lng: -79.3819992 };
+               
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
+                $scope.regions = [];
                 $scope.countries = [];
                 $scope.zipLabel = '';
                 $scope.regionLabel = '';                
                 $scope.marker = {   id: Date.now(), 
                                     latitude: $scope.address.lat,
                                     longitude: $scope.address.lng,
-                                    options: { draggable: true }, 
-                                    events: { drag: function(marker) {
-                                        //$scope.address.lat = marker.latitude;
-                                        //$scope.address.lng = marker.longitude;  
-                                    }}};                                 
+                                    options: { draggable: true }};                                 
                 $scope.markers = [$scope.marker];
-                $scope.map = { center: { latitude: 43.6479967, longitude: -79.3798992 }, zoom: 14, control:{} };
-                $scope.populated = $scope.address.lat || $scope.address.lng;
+                $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false, 
                                                     streetViewControl: false, 
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});                
 
                 if($scope.options.countries) {
-
-
                     angular.forEach($scope.options.countries,function(code) {
                             
                         var country = $filter('filter')(COUNTRIES,{ code: code },true)[0];
@@ -51,14 +46,11 @@
                     $scope.countries = COUNTRIES;
                 }
 
-                $scope.country = {};
-                $scope.regions = [];
-
                 if(!$scope.address.country && $scope.countries[0]) {
                     $scope.address.country = $scope.countries[0].code;
                     $scope.regions = $scope.countries[0].regions;
                 }
-                
+
                 $scope.$watch('address.country',function(country) {
                     var country = $filter('filter')(COUNTRIES,{ code: country },true)[0];
                     $scope.regions = country ? country.regions : [];
@@ -71,7 +63,7 @@
                     var address = $scope.address;
                     var populated = !!(address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng;
 
-                    if(!$scope.populated && populated) {
+                    if((!$scope.address.lat || !$scope.address.lng) && populated) {
                         $scope.search()
                         .then(function() {
                             $scope.populated = true;
@@ -105,6 +97,7 @@
                             defer.resolve();  
                         }
                     });
+                    
                     return defer.promise;
                 }
             }  
@@ -204,7 +197,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "<div class=\"map-container\">\r" +
     "\n" +
-    "    <md-button class=\"center\"ng-show=\"populated\" ng-click=\"search()\">Center Map using Address</md-button>\r" +
+    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"search()\">Center Map using Address</md-button>\r" +
     "\n" +
     "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\r" +
     "\n" +
@@ -212,10 +205,9 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "    </ui-gmap-google-map>\r" +
     "\n" +
-    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"populated\"><div>Please populate the address above to locate it on the map</div></div>\r" +
+    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\r" +
     "\n" +
-    "</div>\r" +
-    "\n"
+    "</div>"
   );
 
 }]);
