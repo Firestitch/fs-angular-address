@@ -1,30 +1,30 @@
 <div layout="row">
     <md-input-container flex="50">
         <label>Address</label>
-        <input ng-model="address.address">
+        <input ng-model="address.address" ng-blur="populateSearch()">
     </md-input-container>
 
     <md-input-container flex>
         <label>Address 2</label>
-        <input ng-model="address.address2">
+        <input ng-model="address.address2" ng-blur="populateSearch()">
     </md-input-container>
 </div>
 <div layout="row">
     <md-input-container flex="50">
         <label>City</label>
-        <input ng-model="address.city">
+        <input ng-model="address.city" ng-blur="populateSearch()">
     </md-input-container>
 
     <md-input-container flex>
-        <label>Postal Code</label>
-        <input name="zip" ng-model="address.zip">
+        <label>{{zipLabel}}</label>
+        <input name="zip" ng-model="address.zip" ng-blur="populateSearch()">
     </md-input-container>
 </div>    
 
 <div layout="row">
     <md-input-container flex="50">
-        <label>State</label>
-        <md-select ng-model="address.region">
+        <label>{{regionLabel}}</label>
+        <md-select ng-model="address.region" ng-change="populateSearch()">
             <md-option ng-repeat="region in regions" value="{{region.code}}">
                 {{region.name}}
             </md-option>
@@ -33,10 +33,18 @@
 
     <md-input-container flex>
         <label>Country</label>
-        <md-select ng-model="address.country">
+        <md-select ng-model="address.country" ng-change="populateSearch()">
             <md-option ng-repeat="country in countries" value="{{country.code}}">
                 {{country.name}}
             </md-option>
         </md-select>
     </md-input-container>  
+</div>
+
+<div class="map-container">
+    <md-button class="center"ng-show="populated" ng-click="search()">Center Map using Address</md-button>
+    <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
+        <ui-gmap-markers models="markers" coords="'self'" options="'self'"/></ui-gmap-google-map>
+    </ui-gmap-google-map>
+    <div class="address-incomplete" layout="row" layout-align="center center" ng-hide="populated"><div>Please populate the address above to locate it on the map</div></div>
 </div>
