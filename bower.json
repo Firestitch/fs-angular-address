@@ -1,0 +1,20 @@
+{
+  "name": "fs-angular-address", 
+  "description": "",
+  "main": [
+    "dist/address.js",
+    "dist/address.css"
+  ],
+   "dependencies": {
+    "fs-angular-country": "~1.0.0"
+  }
+  "authors": [
+    "Firestitch Inc."
+  ],
+  "license": "MIT",
+  "ignore": [
+    "src",
+    ".gitignore"
+  ],
+  "private": false
+}
