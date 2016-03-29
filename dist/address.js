@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('fs-angular-address',['uiGmapgoogle-maps'])
+    angular.module('fs-angular-address',['fs-angular-country','uiGmapgoogle-maps'])
     .directive('fsAddress', function(COUNTRIES, $filter, uiGmapIsReady, $q) {
         return {
             templateUrl: 'views/directives/address.html',
