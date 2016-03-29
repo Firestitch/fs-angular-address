@@ -7,7 +7,7 @@
   ],
    "dependencies": {
     "fs-angular-country": "~1.0.0"
-  }
+  },
   "authors": [
     "Firestitch Inc."
   ],
