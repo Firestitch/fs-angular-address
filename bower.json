@@ -6,7 +6,8 @@
     "dist/address.css"
   ],
    "dependencies": {
-    "fs-angular-country": "~1.0.0"
+    "fs-angular-country": "~1.0.0",
+    "angular-google-maps": "~2.3.2"
   },
   "authors": [
     "Firestitch Inc."
