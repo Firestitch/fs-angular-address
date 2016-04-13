@@ -41,7 +41,7 @@
     </md-input-container>
 </div>
 
-<div class="map-container" ng-show="options.map">
+<div class="map-container" ng-show="map">
     <md-button class="center"ng-show="address.lat && address.lng" ng-click="search()">Center Map using Address</md-button>
     <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
         <ui-gmap-markers models="markers" coords="'self'" options="'self'"/></ui-gmap-google-map>

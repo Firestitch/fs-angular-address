@@ -130,104 +130,55 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
   'use strict';
 
   $templateCache.put('views/directives/address.html',
-    "<div layout=\"row\">\r" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex>\n" +
+    "        <label>Address</label>\n" +
+    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\">\n" +
+    "    </md-input-container>\n" +
     "\n" +
-    "    <md-input-container flex>\r" +
+    "    <md-input-container flex ng-show=\"options.address2\">\n" +
+    "        <label>Address 2</label>\n" +
+    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\">\n" +
+    "    </md-input-container>\n" +
+    "</div>\n" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex>\n" +
+    "        <label>City</label>\n" +
+    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\">\n" +
+    "    </md-input-container>\n" +
     "\n" +
-    "        <label>Address</label>\r" +
+    "    <md-input-container flex>\n" +
+    "        <label>{{zipLabel}}</label>\n" +
+    "        <input name=\"zip\" ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\">\n" +
+    "    </md-input-container>\n" +
+    "</div>    \n" +
     "\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\">\r" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex=\"50\">\n" +
+    "        <label>Country</label>\n" +
+    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\">\n" +
+    "            <md-option ng-repeat=\"country in countries\" value=\"{{country.code}}\">\n" +
+    "                {{country.name}}\n" +
+    "            </md-option>\n" +
+    "        </md-select>\n" +
+    "    </md-input-container>  \n" +
     "\n" +
-    "    </md-input-container>\r" +
+    "    <md-input-container flex>\n" +
+    "        <label>{{regionLabel}}</label>\n" +
+    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\">\n" +
+    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\n" +
+    "                {{region.name}}\n" +
+    "            </md-option>\n" +
+    "        </md-select>\n" +
+    "    </md-input-container>\n" +
+    "</div>\n" +
     "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex ng-show=\"options.address2\">\r" +
-    "\n" +
-    "        <label>Address 2</label>\r" +
-    "\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\">\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n" +
-    "<div layout=\"row\">\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>City</label>\r" +
-    "\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\">\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>{{zipLabel}}</label>\r" +
-    "\n" +
-    "        <input name=\"zip\" ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\">\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>    \r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "<div layout=\"row\">\r" +
-    "\n" +
-    "    <md-input-container flex=\"50\">\r" +
-    "\n" +
-    "        <label>Country</label>\r" +
-    "\n" +
-    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\">\r" +
-    "\n" +
-    "            <md-option ng-repeat=\"country in countries\" value=\"{{country.code}}\">\r" +
-    "\n" +
-    "                {{country.name}}\r" +
-    "\n" +
-    "            </md-option>\r" +
-    "\n" +
-    "        </md-select>\r" +
-    "\n" +
-    "    </md-input-container>  \r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>{{regionLabel}}</label>\r" +
-    "\n" +
-    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\">\r" +
-    "\n" +
-    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
-    "\n" +
-    "                {{region.name}}\r" +
-    "\n" +
-    "            </md-option>\r" +
-    "\n" +
-    "        </md-select>\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "<div class=\"map-container\" ng-show=\"options.map\">\r" +
-    "\n" +
-    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"search()\">Center Map using Address</md-button>\r" +
-    "\n" +
-    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\r" +
-    "\n" +
-    "        <ui-gmap-markers models=\"markers\" coords=\"'self'\" options=\"'self'\"/></ui-gmap-google-map>\r" +
-    "\n" +
-    "    </ui-gmap-google-map>\r" +
-    "\n" +
-    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\r" +
-    "\n" +
+    "<div class=\"map-container\" ng-show=\"map\">\n" +
+    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"search()\">Center Map using Address</md-button>\n" +
+    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\n" +
+    "        <ui-gmap-markers models=\"markers\" coords=\"'self'\" options=\"'self'\"/></ui-gmap-google-map>\n" +
+    "    </ui-gmap-google-map>\n" +
+    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\n" +
     "</div>"
   );
 
