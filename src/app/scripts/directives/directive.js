@@ -13,8 +13,12 @@
 
             link: function($scope, element, attrs, ctrl) {
 
-                $scope.options.cords = { lat: 43.6379967, lng: -79.3819992 };
-               
+                $scope.options = $scope.options || {};                
+                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967, 
+                                                                    lng: -79.3819992 },
+                                                        address2: true,
+                                                        map: true },$scope.options);
+     
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
@@ -60,14 +64,16 @@
                 $scope.populateSearch = function() {
 
                     var address = $scope.address;
-                    var populated = !!(address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng;
+                    var populated = !!((address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng);
 
-                    if((!$scope.address.lat || !$scope.address.lng) && populated) {
+                    //if((!$scope.address.lat || !$scope.address.lng) && populated) {
+                    if(!$scope.populated) {
                         $scope.search()
                         .then(function() {
-                            $scope.populated = true;
+                            
                         });
                     }
+                    //}
                 }
 
                 $scope.search = function() {

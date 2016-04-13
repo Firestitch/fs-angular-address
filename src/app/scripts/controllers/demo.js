@@ -6,6 +6,7 @@
 
     //$scope.address = { lat: 43.9754689, lng: 4.3423691 };
     $scope.address = {};
+    $scope.options = { countries: ['CA','US'], address2: false };
     
     $scope.submit = function() {
         alert('submit');

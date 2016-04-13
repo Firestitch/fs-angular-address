@@ -1,47 +1,47 @@
 <div layout="row">
-    <md-input-container flex="50">
+    <md-input-container flex>
         <label>Address</label>
-        <input ng-model="address.address" ng-blur="populateSearch()">
+        <input ng-model="address.address" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address.required">
     </md-input-container>
 
-    <md-input-container flex>
+    <md-input-container flex ng-show="options.address2">
         <label>Address 2</label>
-        <input ng-model="address.address2" ng-blur="populateSearch()">
+        <input ng-model="address.address2" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address2.required">
     </md-input-container>
 </div>
 <div layout="row">
-    <md-input-container flex="50">
+    <md-input-container flex>
         <label>City</label>
-        <input ng-model="address.city" ng-blur="populateSearch()">
+        <input ng-model="address.city" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.city.required">
     </md-input-container>
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
-        <input name="zip" ng-model="address.zip" ng-blur="populateSearch()">
+        <input name="zip" ng-model="address.zip" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.zip.required">
     </md-input-container>
 </div>    
 
 <div layout="row">
     <md-input-container flex="50">
-        <label>{{regionLabel}}</label>
-        <md-select ng-model="address.region" ng-change="populateSearch()">
-            <md-option ng-repeat="region in regions" value="{{region.code}}">
-                {{region.name}}
-            </md-option>
-        </md-select>
-    </md-input-container>
-
-    <md-input-container flex>
         <label>Country</label>
-        <md-select ng-model="address.country" ng-change="populateSearch()">
+        <md-select ng-model="address.country" ng-change="populateSearch()" ng-required="options.country.required">
             <md-option ng-repeat="country in countries" value="{{country.code}}">
                 {{country.name}}
             </md-option>
         </md-select>
     </md-input-container>  
+
+    <md-input-container flex>
+        <label>{{regionLabel}}</label>
+        <md-select ng-model="address.region" ng-change="populateSearch()" ng-required="options.region.required">
+            <md-option ng-repeat="region in regions" value="{{region.code}}">
+                {{region.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
 </div>
 
-<div class="map-container">
+<div class="map-container" ng-show="options.map">
     <md-button class="center"ng-show="address.lat && address.lng" ng-click="search()">Center Map using Address</md-button>
     <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
         <ui-gmap-markers models="markers" coords="'self'" options="'self'"/></ui-gmap-google-map>
