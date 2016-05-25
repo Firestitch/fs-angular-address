@@ -12,7 +12,13 @@
               address: '=fsAddress'
             },
 
-            link: function($scope, element, attrs, ctrl) {
+            controller: function($scope) {
+
+                try {
+                    var g = google;
+                } catch(e) {
+                    throw 'Google Map API not found. Include <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>';
+                }
 
                 $scope.options = $scope.options || {};                
                 $scope.options = angular.extend({},{    cords: {    lat: 43.6379967, 
@@ -116,7 +122,6 @@
     // Replace it!
     head.insertBefore = function (newElement, referenceElement) {
         if (newElement.href && newElement.href.indexOf('https://fonts.googleapis.com/css?family=Roboto') === 0) {
-
             console.info('Prevented Roboto from loading!');
             return;
         }

@@ -1,7 +1,7 @@
 {
   "name": "fs-angular-address",
   "namespace": "address",
-  "port": "5009",   
+  "port": "5012",   
   "moduleName": "app",
   "version": "0.0.0",
   "appPath": "app",
