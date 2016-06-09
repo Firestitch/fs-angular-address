@@ -12,7 +12,7 @@
               address: '=fsAddress'
             },
 
-            controller: function($scope) {
+            controller: function($scope, uiGmapIsReady) {
 
                 try {
                     var g = google;
@@ -111,7 +111,14 @@
                     });
                     
                     return defer.promise;
-                }
+                };
+
+                // Used to wait for directives to finish augmenting control objects.
+                // Do not use for that purposes uiGmapGoogleMapApi.
+                uiGmapIsReady.promise(1).then(function(instances) {
+                    google.maps.event.trigger($scope.map.control.getGMap(), 'resize');
+                });
+
             }  
         };
     });
