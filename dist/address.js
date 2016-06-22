@@ -145,18 +145,18 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "<div layout=\"row\">\n" +
     "    <md-input-container flex>\n" +
     "        <label>Address</label>\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\">\n" +
+    "        <input name=\"address\" ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\">\n" +
     "    </md-input-container>\n" +
     "\n" +
     "    <md-input-container flex ng-show=\"options.address2\">\n" +
     "        <label>Address 2</label>\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\">\n" +
+    "        <input name=\"address2\" ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\">\n" +
     "    </md-input-container>\n" +
     "</div>\n" +
     "<div layout=\"row\">\n" +
     "    <md-input-container flex>\n" +
     "        <label>City</label>\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\">\n" +
+    "        <input name=\"city\" ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\">\n" +
     "    </md-input-container>\n" +
     "\n" +
     "    <md-input-container flex>\n" +

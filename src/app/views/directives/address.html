@@ -1,18 +1,18 @@
 <div layout="row">
     <md-input-container flex>
         <label>Address</label>
-        <input ng-model="address.address" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address.required">
+        <input name="address" ng-model="address.address" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address.required">
     </md-input-container>
 
     <md-input-container flex ng-show="options.address2">
         <label>Address 2</label>
-        <input ng-model="address.address2" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address2.required">
+        <input name="address2" ng-model="address.address2" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address2.required">
     </md-input-container>
 </div>
 <div layout="row">
     <md-input-container flex>
         <label>City</label>
-        <input ng-model="address.city" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.city.required">
+        <input name="city" ng-model="address.city" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.city.required">
     </md-input-container>
 
     <md-input-container flex>
