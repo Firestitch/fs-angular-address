@@ -42,6 +42,21 @@
                                                     streetViewControl: false, 
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});                
 
+                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
+                 
+                    if($scope.options[item]===false) {
+                        $scope.options[item] = { show: false };
+                    }
+
+                    if($scope.options[item]===undefined) {
+                        $scope.options[item] = {};
+                    }
+
+                    if(!$scope.options[item].name) {
+                        $scope.options[item].name = 'input_' + guid();
+                    }
+                });
+
                 if($scope.options.countries) {
                     angular.forEach($scope.options.countries,function(code) {
                             
@@ -73,14 +88,12 @@
                     var address = $scope.address;
                     var populated = !!((address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng);
 
-                    //if((!$scope.address.lat || !$scope.address.lng) && populated) {
                     if(!$scope.populated) {
                         $scope.search()
                         .then(function() {
                             
                         });
                     }
-                    //}
                 }
 
                 $scope.search = function() {
@@ -119,6 +132,12 @@
                     google.maps.event.trigger($scope.map.control.getGMap(), 'resize');
                 });
 
+                function guid() {
+                    return 'xxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+                        return v.toString(16);
+                    });
+                }
             }  
         };
     });
@@ -148,17 +167,17 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\">\r" +
+    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" name=\"{{options.address.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
     "\r" +
     "\n" +
-    "    <md-input-container flex ng-show=\"options.address2\">\r" +
+    "    <md-input-container flex ng-show=\"options.address2.show\">\r" +
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\">\r" +
+    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" name=\"{{options.address2.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -170,7 +189,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>City</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\">\r" +
+    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  name=\"{{options.city.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -180,7 +199,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{zipLabel}}</label>\r" +
     "\n" +
-    "        <input name=\"zip\" ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\">\r" +
+    "        <input ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" name=\"{{options.zip.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -194,7 +213,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Country</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\">\r" +
+    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\" name=\"{{options.country.name}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"country in countries\" value=\"{{country.code}}\">\r" +
     "\n" +
@@ -212,7 +231,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{regionLabel}}</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\">\r" +
+    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\" name=\"{{options.region.name}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
     "\n" +

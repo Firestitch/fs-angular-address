@@ -10,7 +10,8 @@
     "angular-material": "1.0.5",
     "angular-ui-router": "0.2.15",
     "fs-angular-country": "latest",
-    "angular-google-maps": "2.3.2"
+    "angular-google-maps": "2.3.2",
+    "fs-angular-validate": "latest"
   },
   "devDependencies": {
     "angular-mocks": "1.5.0",

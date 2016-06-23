@@ -41,6 +41,21 @@
                                                     streetViewControl: false, 
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});                
 
+                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
+                 
+                    if($scope.options[item]===false) {
+                        $scope.options[item] = { show: false };
+                    }
+
+                    if($scope.options[item]===undefined) {
+                        $scope.options[item] = {};
+                    }
+
+                    if(!$scope.options[item].name) {
+                        $scope.options[item].name = 'input_' + guid();
+                    }
+                });
+
                 if($scope.options.countries) {
                     angular.forEach($scope.options.countries,function(code) {
                             
@@ -72,14 +87,12 @@
                     var address = $scope.address;
                     var populated = !!((address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng);
 
-                    //if((!$scope.address.lat || !$scope.address.lng) && populated) {
                     if(!$scope.populated) {
                         $scope.search()
                         .then(function() {
                             
                         });
                     }
-                    //}
                 }
 
                 $scope.search = function() {
@@ -118,6 +131,12 @@
                     google.maps.event.trigger($scope.map.control.getGMap(), 'resize');
                 });
 
+                function guid() {
+                    return 'xxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+                        return v.toString(16);
+                    });
+                }
             }  
         };
     });

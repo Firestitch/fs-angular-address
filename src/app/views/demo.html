@@ -1,5 +1,9 @@
 <h2>Address</h2>
-<fs-address fs-address="address" fs-options="options"></fs-address>
+<form fs-validate="submit()">
+	<fs-address fs-address="address" fs-options="options"></fs-address>
+
+	<md-button class="md-raised md-accent" type="submit">Save</md-button>
+</form>
 
 <h2>Object</h2>
 {{address}}
