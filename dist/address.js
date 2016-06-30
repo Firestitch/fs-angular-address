@@ -17,7 +17,7 @@
                 try {
                     var g = google;
                 } catch(e) {
-                    throw 'Google Map API not found. Include <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>';
+                    throw 'Google Map API not found. Include <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDfOOiu1FrPzHkxMbL3ItZLeSTZuwShVFQ"></script>';
                 }
 
                 $scope.options = $scope.options || {};                
