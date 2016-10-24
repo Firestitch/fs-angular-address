@@ -20,30 +20,31 @@
                     throw 'Google Map API not found. Include <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDfOOiu1FrPzHkxMbL3ItZLeSTZuwShVFQ"></script>';
                 }
 
-                $scope.options = $scope.options || {};                
-                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967, 
+                $scope.options = $scope.options || {};
+                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967,
                                                                     lng: -79.3819992 },
                                                         address2: true,
+                                                        disabled: false,
                                                         map: true },$scope.options);
-     
+
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
                 $scope.countries = [];
                 $scope.zipLabel = '';
-                $scope.regionLabel = '';                
-                $scope.marker = {   id: Date.now(), 
+                $scope.regionLabel = '';
+                $scope.marker = {   id: Date.now(),
                                     latitude: $scope.address.lat,
                                     longitude: $scope.address.lng,
-                                    options: { draggable: true }};                                 
+                                    options: { draggable: true }};
                 $scope.markers = [$scope.marker];
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
-                $scope.mapOptions = angular.merge({ scrollwheel: false, 
-                                                    streetViewControl: false, 
-                                                    mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});                
+                $scope.mapOptions = angular.merge({ scrollwheel: false,
+                                                    streetViewControl: false,
+                                                    mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
 
                 angular.forEach(['address','address2','city','region','country','zip'],function(item) {
-                 
+
                     if($scope.options[item]===false) {
                         $scope.options[item] = { show: false };
                     }
@@ -59,11 +60,11 @@
 
                 if($scope.options.countries) {
                     angular.forEach($scope.options.countries,function(code) {
-                            
+
                         var country = $filter('filter')(COUNTRIES,{ code: code },true)[0];
 
                         if(country) {
-                            $scope.countries.push(country);  
+                            $scope.countries.push(country);
                         }
                     });
 
@@ -91,7 +92,7 @@
                     if(!$scope.populated) {
                         $scope.search()
                         .then(function() {
-                            
+
                         });
                     }
                 }
@@ -100,7 +101,7 @@
 
                     var defer = $q.defer();
                     var geocoder = new google.maps.Geocoder();
-                    var address = $scope.address;                    
+                    var address = $scope.address;
                     var parts = [address.address,address.address2,address.city,address.region,address.zip];
                     var country = $filter('filter')(COUNTRIES,{ code: address.country },true)[0];
 
@@ -109,20 +110,20 @@
                     }
 
                     geocoder.geocode( { 'address': parts.join(' ,')  }, function(results, status) {
-                       
+
                         if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
 
                             var location = results[0].geometry.location;
                             $scope.address.lat = location.lat();
-                            $scope.address.lng = location.lng();                            
+                            $scope.address.lng = location.lng();
                             $scope.map.control.refresh({ latitude: $scope.address.lat, longitude: $scope.address.lng });
-                            
+
                             $scope.marker.latitude = $scope.address.lat;
                             $scope.marker.longitude = $scope.address.lng;
-                            defer.resolve();  
+                            defer.resolve();
                         }
                     });
-                    
+
                     return defer.promise;
                 };
 
@@ -138,7 +139,7 @@
                         return v.toString(16);
                     });
                 }
-            }  
+            }
         };
     });
 
@@ -167,7 +168,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" name=\"{{options.address.name}}\">\r" +
+    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -177,7 +178,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" name=\"{{options.address2.name}}\">\r" +
+    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -189,7 +190,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>City</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  name=\"{{options.city.name}}\">\r" +
+    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  ng-disabled=\"options.disabled\" name=\"{{options.city.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -199,11 +200,11 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{zipLabel}}</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" name=\"{{options.zip.name}}\">\r" +
+    "        <input ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.name}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
-    "</div>    \r" +
+    "</div>\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -213,7 +214,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Country</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\" name=\"{{options.country.name}}\">\r" +
+    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.name}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"country in countries\" value=\"{{country.code}}\">\r" +
     "\n" +
@@ -223,7 +224,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        </md-select>\r" +
     "\n" +
-    "    </md-input-container>  \r" +
+    "    </md-input-container>\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -231,7 +232,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{regionLabel}}</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\" name=\"{{options.region.name}}\">\r" +
+    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.name}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
     "\n" +

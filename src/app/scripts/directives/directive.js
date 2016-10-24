@@ -19,30 +19,31 @@
                     throw 'Google Map API not found. Include <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyDfOOiu1FrPzHkxMbL3ItZLeSTZuwShVFQ"></script>';
                 }
 
-                $scope.options = $scope.options || {};                
-                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967, 
+                $scope.options = $scope.options || {};
+                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967,
                                                                     lng: -79.3819992 },
                                                         address2: true,
+                                                        disabled: false,
                                                         map: true },$scope.options);
-     
+
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
                 $scope.countries = [];
                 $scope.zipLabel = '';
-                $scope.regionLabel = '';                
-                $scope.marker = {   id: Date.now(), 
+                $scope.regionLabel = '';
+                $scope.marker = {   id: Date.now(),
                                     latitude: $scope.address.lat,
                                     longitude: $scope.address.lng,
-                                    options: { draggable: true }};                                 
+                                    options: { draggable: true }};
                 $scope.markers = [$scope.marker];
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
-                $scope.mapOptions = angular.merge({ scrollwheel: false, 
-                                                    streetViewControl: false, 
-                                                    mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});                
+                $scope.mapOptions = angular.merge({ scrollwheel: false,
+                                                    streetViewControl: false,
+                                                    mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
 
                 angular.forEach(['address','address2','city','region','country','zip'],function(item) {
-                 
+
                     if($scope.options[item]===false) {
                         $scope.options[item] = { show: false };
                     }
@@ -58,11 +59,11 @@
 
                 if($scope.options.countries) {
                     angular.forEach($scope.options.countries,function(code) {
-                            
+
                         var country = $filter('filter')(COUNTRIES,{ code: code },true)[0];
 
                         if(country) {
-                            $scope.countries.push(country);  
+                            $scope.countries.push(country);
                         }
                     });
 
@@ -90,7 +91,7 @@
                     if(!$scope.populated) {
                         $scope.search()
                         .then(function() {
-                            
+
                         });
                     }
                 }
@@ -99,7 +100,7 @@
 
                     var defer = $q.defer();
                     var geocoder = new google.maps.Geocoder();
-                    var address = $scope.address;                    
+                    var address = $scope.address;
                     var parts = [address.address,address.address2,address.city,address.region,address.zip];
                     var country = $filter('filter')(COUNTRIES,{ code: address.country },true)[0];
 
@@ -108,20 +109,20 @@
                     }
 
                     geocoder.geocode( { 'address': parts.join(' ,')  }, function(results, status) {
-                       
+
                         if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
 
                             var location = results[0].geometry.location;
                             $scope.address.lat = location.lat();
-                            $scope.address.lng = location.lng();                            
+                            $scope.address.lng = location.lng();
                             $scope.map.control.refresh({ latitude: $scope.address.lat, longitude: $scope.address.lng });
-                            
+
                             $scope.marker.latitude = $scope.address.lat;
                             $scope.marker.longitude = $scope.address.lng;
-                            defer.resolve();  
+                            defer.resolve();
                         }
                     });
-                    
+
                     return defer.promise;
                 };
 
@@ -137,7 +138,7 @@
                         return v.toString(16);
                     });
                 }
-            }  
+            }
         };
     });
 
