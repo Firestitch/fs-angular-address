@@ -1,6 +1,50 @@
 (function () {
     'use strict';
-
+    
+    /**
+     * @ngdoc directive
+     * @name app.directives:fs-address
+     * @restrict E
+     * @param {object} fs-options Options to configure directive.
+     * @param {array} fs-options.countries List of all possible countries
+     * @param {boolean} fs-options.disabled Sets the disabled attribute on the elements
+     * @param {boolean} fs-options.map Show or hide map
+     * @param {object} fs-options.address address field options
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-options.address2 address2 field options. If false - field not showing
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-options.city city field options
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-options.region region field options
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-options.zip zip field options
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-options.country country field options
+                <ul>
+                    <li><label>required</label> Required validation rule</li>
+                </ul>
+     * @param {object} fs-address Data for showing. Possible fields:
+                <ul>
+                    <li>address1</li>
+                    <li>address2</li>
+                    <li>city</li>
+                    <li>country</li>
+                    <li>region</li>
+                    <li>zip</li>
+                    <li>lat</li>
+                    <li>lng</li>
+                </ul>
+    */
     angular.module('fs-angular-address',['fs-angular-country','uiGmapgoogle-maps'])
     .directive('fsAddress', function(COUNTRIES, $filter, uiGmapIsReady, $q) {
         return {
