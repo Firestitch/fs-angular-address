@@ -1,23 +1,21 @@
 {
   "name": "fs-angular-address",
   "namespace": "address",
-  "port": "5012",   
+  "port": "5012",
   "moduleName": "app",
   "version": "0.0.0",
   "appPath": "app",
   "dependencies": {
-    "angular": "1.5.0",
-    "angular-material": "1.0.5",
-    "angular-ui-router": "0.2.15",
-    "fs-angular-country": "latest",
-    "angular-google-maps": "2.3.2",
-    "fs-angular-validate": "latest"
-  },
-  "devDependencies": {
-    "angular-mocks": "1.5.0",
-    "angular-scenario": "1.5.0"
+    "angular": "1.6.0",
+    "angular-material": "1.1.1",
+    "angular-ui-router": "0.3.2",
+    "fs-angular-country": "^1.0.0",
+    "fs-angular-util": "^1.0.0",
+    "fs-angular-array": "^1.0.0",
+    "fs-angular-validate": "^1.0.0",
+    "angular-google-maps": "^2.4.0"
   },
   "resolutions": {
-    "angular": "1.5.0"
+    "angular": "1.6.0"
   }
 }

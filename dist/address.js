@@ -1,7 +1,7 @@
 
 (function () {
     'use strict';
-    
+
     /**
      * @ngdoc directive
      * @name app.directives:fs-address
@@ -10,6 +10,7 @@
      * @param {array} fs-options.countries List of all possible countries
      * @param {boolean} fs-options.disabled Sets the disabled attribute on the elements
      * @param {boolean} fs-options.map Show or hide map
+     * @param {array} fs-options.domestics An array of country codes that are to be placed at the top of the countries dropdown
      * @param {object} fs-options.address address field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
@@ -46,8 +47,8 @@
                     <li>lng</li>
                 </ul>
     */
-    angular.module('fs-angular-address',['fs-angular-country','uiGmapgoogle-maps'])
-    .directive('fsAddress', function(COUNTRIES, $filter, uiGmapIsReady, $q) {
+    angular.module('fs-angular-address',['fs-angular-country','fs-angular-util','fs-angular-array','uiGmapgoogle-maps'])
+    .directive('fsAddress', function(COUNTRIES, $filter, uiGmapIsReady, $q, fsUtil, fsArray) {
         return {
             templateUrl: 'views/directives/address.html',
             restrict: 'E',
@@ -69,23 +70,31 @@
                                                                     lng: -79.3819992 },
                                                         address2: true,
                                                         disabled: false,
+                                                        domestics: ['CA','US'],
                                                         map: true },$scope.options);
 
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
-                $scope.countries = [];
+                $scope.countries = { 	domestic: [],
+                						international: [] };
                 $scope.zipLabel = '';
                 $scope.regionLabel = '';
-                $scope.marker = {   id: Date.now(),
-                                    latitude: $scope.address.lat,
-                                    longitude: $scope.address.lng,
-                                    options: { draggable: true }};
-                $scope.markers = [$scope.marker];
+                $scope.center = null;
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false,
                                                     streetViewControl: false,
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
+                $scope.marker = {   id: 0,
+                                    coords: { latitude: 0, longitude: $scope.address.lng },
+                                    options: { draggable: true },
+                                	control: {},
+                                	events: {
+							        	dragend: function(marker) {
+								        	$scope.address.lat = marker.getPosition().lat();
+								        	$scope.address.lng = marker.getPosition().lng();
+								        }
+							        }};
 
                 angular.forEach(['address','address2','city','region','country','zip'],function(item) {
 
@@ -98,27 +107,44 @@
                     }
 
                     if(!$scope.options[item].name) {
-                        $scope.options[item].name = 'input_' + guid();
+                        $scope.options[item].name = 'input_' + fsUtil.guid();
                     }
                 });
 
+                var countries = [];
                 if($scope.options.countries) {
                     angular.forEach($scope.options.countries,function(code) {
 
                         var country = $filter('filter')(COUNTRIES,{ code: code },true)[0];
 
                         if(country) {
-                            $scope.countries.push(country);
+                            countries.push(country);
                         }
                     });
 
                 } else {
-                    $scope.countries = COUNTRIES;
+                    countries = angular.copy(COUNTRIES);
                 }
 
-                if(!$scope.address.country && $scope.countries[0]) {
-                    $scope.address.country = $scope.countries[0].code;
-                    $scope.regions = $scope.countries[0].regions;
+                if($scope.options.domestics) {
+
+                	$scope.countries.international = countries;
+
+                	for(var i=$scope.options.domestics.length-1;i>=0;i--) {
+
+                		var item = fsArray.remove($scope.countries.international,{ code: $scope.options.domestics[i] })[0];
+
+                		if(item) {
+                			$scope.countries.domestic.unshift(item);
+	                	}
+                	}
+
+                } else {
+                	$scope.countries.domestic = countries;
+                }
+
+                if(!$scope.address.country && $scope.countries.domestic[0]) {
+                    $scope.address.country = $scope.countries.domestic[0].code;
                 }
 
                 $scope.$watch('address.country',function(country) {
@@ -128,22 +154,18 @@
                     $scope.regionLabel = country && country.code=='CA' ? 'Province' : 'State';
                 });
 
-                $scope.populateSearch = function() {
+                $scope.recenter = function() {
 
-                    var address = $scope.address;
-                    var populated = !!((address.address && address.city && address.region && address.zip && address.country) || address.lat || address.lng);
+                	if($scope.center) {
+	                	$scope.map.control.refresh({ latitude: $scope.center.lat, longitude: $scope.center.lng });
 
-                    if(!$scope.populated) {
-                        $scope.search()
-                        .then(function() {
-
-                        });
-                    }
+		                $scope.marker.coords.latitude = $scope.center.lat;
+		                $scope.marker.coords.longitude = $scope.center.lng;
+		            }
                 }
 
                 $scope.search = function() {
 
-                    var defer = $q.defer();
                     var geocoder = new google.maps.Geocoder();
                     var address = $scope.address;
                     var parts = [address.address,address.address2,address.city,address.region,address.zip];
@@ -155,34 +177,31 @@
 
                     geocoder.geocode( { 'address': parts.join(' ,')  }, function(results, status) {
 
-                        if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
-
+                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
                             var location = results[0].geometry.location;
+                            var control = $scope.map.control;
+
                             $scope.address.lat = location.lat();
                             $scope.address.lng = location.lng();
-                            $scope.map.control.refresh({ latitude: $scope.address.lat, longitude: $scope.address.lng });
 
-                            $scope.marker.latitude = $scope.address.lat;
-                            $scope.marker.longitude = $scope.address.lng;
-                            defer.resolve();
+                            $scope.center = { lat: location.lat(), lng: location.lng() };
+
+                           	control.refresh({ latitude: location.lat(), longitude: location.lng() });
+
+							var marker = $scope.marker.control.getGMarkers()[0];
+							if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
+	                            $scope.marker.coords.latitude = location.lat();
+    		                    $scope.marker.coords.longitude = location.lng();
+        		            }
                         }
                     });
-
-                    return defer.promise;
-                };
+                }
 
                 // Used to wait for directives to finish augmenting control objects.
                 // Do not use for that purposes uiGmapGoogleMapApi.
                 uiGmapIsReady.promise(1).then(function(instances) {
                     google.maps.event.trigger($scope.map.control.getGMap(), 'resize');
                 });
-
-                function guid() {
-                    return 'xxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-                        return v.toString(16);
-                    });
-                }
             }
         };
     });
@@ -206,55 +225,114 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
   'use strict';
 
   $templateCache.put('views/directives/address.html',
-    "<div layout=\"row\">\n" +
-    "    <md-input-container flex>\n" +
-    "        <label>Address</label>\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.name}}\">\n" +
-    "    </md-input-container>\n" +
+    "<div layout=\"row\">\r" +
     "\n" +
-    "    <md-input-container flex ng-show=\"options.address2.show\">\n" +
-    "        <label>Address 2</label>\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.name}}\">\n" +
-    "    </md-input-container>\n" +
-    "</div>\n" +
-    "<div layout=\"row\">\n" +
-    "    <md-input-container flex>\n" +
-    "        <label>City</label>\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  ng-disabled=\"options.disabled\" name=\"{{options.city.name}}\">\n" +
-    "    </md-input-container>\n" +
+    "    <md-input-container flex>\r" +
     "\n" +
-    "    <md-input-container flex>\n" +
-    "        <label>{{zipLabel}}</label>\n" +
-    "        <input ng-model=\"address.zip\" ng-change=\"populateSearch()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.name}}\">\n" +
-    "    </md-input-container>\n" +
-    "</div>\n" +
+    "        <label>Address</label>\r" +
     "\n" +
-    "<div layout=\"row\">\n" +
-    "    <md-input-container flex=\"50\">\n" +
-    "        <label>Country</label>\n" +
-    "        <md-select ng-model=\"address.country\" ng-change=\"populateSearch()\" ng-required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.name}}\">\n" +
-    "            <md-option ng-repeat=\"country in countries\" value=\"{{country.code}}\">\n" +
-    "                {{country.name}}\n" +
-    "            </md-option>\n" +
-    "        </md-select>\n" +
-    "    </md-input-container>\n" +
+    "        <input ng-model=\"address.address\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.name}}\">\r" +
     "\n" +
-    "    <md-input-container flex>\n" +
-    "        <label>{{regionLabel}}</label>\n" +
-    "        <md-select ng-model=\"address.region\" ng-change=\"populateSearch()\" ng-required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.name}}\">\n" +
-    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\n" +
-    "                {{region.name}}\n" +
-    "            </md-option>\n" +
-    "        </md-select>\n" +
-    "    </md-input-container>\n" +
-    "</div>\n" +
+    "    </md-input-container>\r" +
     "\n" +
-    "<div class=\"map-container\" ng-show=\"options.map\">\n" +
-    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"search()\">Center Map using Address</md-button>\n" +
-    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\n" +
-    "        <ui-gmap-markers models=\"markers\" coords=\"'self'\" options=\"'self'\"/></ui-gmap-google-map>\n" +
-    "    </ui-gmap-google-map>\n" +
-    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\n" +
+    "\r" +
+    "\n" +
+    "    <md-input-container flex ng-show=\"options.address2.show\">\r" +
+    "\n" +
+    "        <label>Address 2</label>\r" +
+    "\n" +
+    "        <input ng-model=\"address.address2\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.name}}\">\r" +
+    "\n" +
+    "    </md-input-container>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div layout=\"row\">\r" +
+    "\n" +
+    "    <md-input-container flex>\r" +
+    "\n" +
+    "        <label>City</label>\r" +
+    "\n" +
+    "        <input ng-model=\"address.city\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  ng-disabled=\"options.disabled\" name=\"{{options.city.name}}\">\r" +
+    "\n" +
+    "    </md-input-container>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <md-input-container flex>\r" +
+    "\n" +
+    "        <label>{{zipLabel}}</label>\r" +
+    "\n" +
+    "        <input ng-model=\"address.zip\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.name}}\">\r" +
+    "\n" +
+    "    </md-input-container>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "<div layout=\"row\">\r" +
+    "\n" +
+    "    <md-input-container flex=\"50\">\r" +
+    "\n" +
+    "        <label>Country</label>\r" +
+    "\n" +
+    "        <md-select ng-model=\"address.country\" ng-change=\"search()\" ng-required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.name}}\">\r" +
+    "\n" +
+    "            <md-option ng-repeat=\"country in countries.domestic\" value=\"{{country.code}}\">\r" +
+    "\n" +
+    "                {{country.name}}\r" +
+    "\n" +
+    "            </md-option>\r" +
+    "\n" +
+    "            <md-optgroup label=\"International\" ng-show=\"countries.international\">\r" +
+    "\n" +
+    "\t            <md-option ng-repeat=\"country in countries.international\" value=\"{{country.code}}\">\r" +
+    "\n" +
+    "\t                {{country.name}}\r" +
+    "\n" +
+    "\t            </md-option>\r" +
+    "\n" +
+    "            </md-optgroup>\r" +
+    "\n" +
+    "        </md-select>\r" +
+    "\n" +
+    "    </md-input-container>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <md-input-container flex>\r" +
+    "\n" +
+    "        <label>{{regionLabel}}</label>\r" +
+    "\n" +
+    "        <md-select ng-model=\"address.region\" ng-change=\"search()\" ng-required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.name}}\">\r" +
+    "\n" +
+    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
+    "\n" +
+    "                {{region.name}}\r" +
+    "\n" +
+    "            </md-option>\r" +
+    "\n" +
+    "        </md-select>\r" +
+    "\n" +
+    "    </md-input-container>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "<div class=\"map-container\" ng-show=\"options.map\">\r" +
+    "\n" +
+    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"recenter()\" ng-show=\"center\">Center Map using Address</md-button>\r" +
+    "\n" +
+    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\r" +
+    "\n" +
+    "    \t<ui-gmap-marker idKey=\"marker.id\" coords=\"marker.coords\" options=\"marker.options\" control=\"marker.control\" events=\"marker.events\"></ui-gmap-marker>\r" +
+    "\n" +
+    "    </ui-gmap-google-map>\r" +
+    "\n" +
+    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\r" +
+    "\n" +
     "</div>"
   );
 

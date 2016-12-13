@@ -1,13 +1,15 @@
 {
-  "name": "fs-angular-address", 
+  "name": "fs-angular-address",
   "description": "",
   "main": [
     "dist/address.js",
     "dist/address.css"
   ],
    "dependencies": {
-    "fs-angular-country": "~1.0.0",
-    "angular-google-maps": "~2.3.2"
+    "fs-angular-country": "^1.0.0",
+    "fs-angular-util": "^1.0.0",
+    "fs-angular-array": "^1.0.0",
+    "angular-google-maps": "^2.3.2"
   },
   "authors": [
     "Firestitch Inc."

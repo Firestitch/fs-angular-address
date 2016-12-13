@@ -1,39 +1,44 @@
 <div layout="row">
     <md-input-container flex>
         <label>Address</label>
-        <input ng-model="address.address" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address.required" ng-disabled="options.disabled" name="{{options.address.name}}">
+        <input ng-model="address.address" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.address.required" ng-disabled="options.disabled" name="{{options.address.name}}">
     </md-input-container>
 
     <md-input-container flex ng-show="options.address2.show">
         <label>Address 2</label>
-        <input ng-model="address.address2" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.name}}">
+        <input ng-model="address.address2" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.name}}">
     </md-input-container>
 </div>
 <div layout="row">
     <md-input-container flex>
         <label>City</label>
-        <input ng-model="address.city" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.city.required"  ng-disabled="options.disabled" name="{{options.city.name}}">
+        <input ng-model="address.city" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.city.required"  ng-disabled="options.disabled" name="{{options.city.name}}">
     </md-input-container>
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
-        <input ng-model="address.zip" ng-change="populateSearch()" ng-model-options="{debounce: 400}" ng-required="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.name}}">
+        <input ng-model="address.zip" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.name}}">
     </md-input-container>
 </div>
 
 <div layout="row">
     <md-input-container flex="50">
         <label>Country</label>
-        <md-select ng-model="address.country" ng-change="populateSearch()" ng-required="options.country.required" ng-disabled="options.disabled" name="{{options.country.name}}">
-            <md-option ng-repeat="country in countries" value="{{country.code}}">
+        <md-select ng-model="address.country" ng-change="search()" ng-required="options.country.required" ng-disabled="options.disabled" name="{{options.country.name}}">
+            <md-option ng-repeat="country in countries.domestic" value="{{country.code}}">
                 {{country.name}}
             </md-option>
+            <md-optgroup label="International" ng-show="countries.international">
+	            <md-option ng-repeat="country in countries.international" value="{{country.code}}">
+	                {{country.name}}
+	            </md-option>
+            </md-optgroup>
         </md-select>
     </md-input-container>
 
     <md-input-container flex>
         <label>{{regionLabel}}</label>
-        <md-select ng-model="address.region" ng-change="populateSearch()" ng-required="options.region.required" ng-disabled="options.disabled" name="{{options.region.name}}">
+        <md-select ng-model="address.region" ng-change="search()" ng-required="options.region.required" ng-disabled="options.disabled" name="{{options.region.name}}">
             <md-option ng-repeat="region in regions" value="{{region.code}}">
                 {{region.name}}
             </md-option>
@@ -42,9 +47,9 @@
 </div>
 
 <div class="map-container" ng-show="options.map">
-    <md-button class="center"ng-show="address.lat && address.lng" ng-click="search()">Center Map using Address</md-button>
+    <md-button class="center"ng-show="address.lat && address.lng" ng-click="recenter()" ng-show="center">Center Map using Address</md-button>
     <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
-        <ui-gmap-markers models="markers" coords="'self'" options="'self'"/></ui-gmap-google-map>
+    	<ui-gmap-marker idKey="marker.id" coords="marker.coords" options="marker.options" control="marker.control" events="marker.events"></ui-gmap-marker>
     </ui-gmap-google-map>
     <div class="address-incomplete" layout="row" layout-align="center center" ng-hide="address.lat && address.lng"><div>Please populate the address above to locate it on the map</div></div>
 </div>
