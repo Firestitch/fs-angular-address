@@ -14,22 +14,27 @@
      * @param {object} fs-options.address address field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.address2 address2 field options. If false - field not showing
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.city city field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.region region field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.zip zip field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.country country field options
                 <ul>
@@ -37,7 +42,7 @@
                 </ul>
      * @param {object} fs-address Data for showing. Possible fields:
                 <ul>
-                    <li>address1</li>
+                    <li>address</li>
                     <li>address2</li>
                     <li>city</li>
                     <li>country</li>
@@ -73,6 +78,7 @@
                                                         domestics: ['CA','US'],
                                                         map: true },$scope.options);
 
+
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
@@ -106,8 +112,12 @@
                         $scope.options[item] = {};
                     }
 
+                    if(!$scope.options[item].id) {
+                        $scope.options[item].id = 'input_' + fsUtil.guid();
+                    }
+
                     if(!$scope.options[item].name) {
-                        $scope.options[item].name = 'input_' + fsUtil.guid();
+                        $scope.options[item].name = item;
                     }
                 });
 
@@ -167,10 +177,12 @@
                 $scope.search = function() {
 
                     var geocoder = new google.maps.Geocoder();
-                    var address = $scope.address;
-                    var parts = [address.address,address.address2,address.city,address.region,address.zip];
-                    var country = $filter('filter')(COUNTRIES,{ code: address.country },true)[0];
-
+                    var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0];
+                    var parts = [	$scope.address[$scope.options.address.name],
+                    				$scope.address[$scope.options.address2.name],
+                    				$scope.address[$scope.options.city.name],
+                    				$scope.address[$scope.options.region.name],
+                    				$scope.address[$scope.options.zip.name]];
                     if(country) {
                         parts.push(country.name);
                     }
@@ -225,13 +237,15 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
   'use strict';
 
   $templateCache.put('views/directives/address.html',
+    "{{options.names}}\r" +
+    "\n" +
     "<div layout=\"row\">\r" +
     "\n" +
     "    <md-input-container flex>\r" +
     "\n" +
     "        <label>Address</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.name}}\">\r" +
+    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -241,7 +255,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.address2\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.name}}\">\r" +
+    "        <input ng-model=\"address[options.address1.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -253,7 +267,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>City</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.city\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  ng-disabled=\"options.disabled\" name=\"{{options.city.name}}\">\r" +
+    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.city.required\"  ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -263,7 +277,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{zipLabel}}</label>\r" +
     "\n" +
-    "        <input ng-model=\"address.zip\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.name}}\">\r" +
+    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -277,7 +291,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Country</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.country\" ng-change=\"search()\" ng-required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.name}}\">\r" +
+    "        <md-select ng-model=\"address[options.country.name]\" ng-change=\"search()\" ng-required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.id}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"country in countries.domestic\" value=\"{{country.code}}\">\r" +
     "\n" +
@@ -305,7 +319,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{regionLabel}}</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address.region\" ng-change=\"search()\" ng-required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.name}}\">\r" +
+    "        <md-select ng-model=\"address[options.region.name]\" ng-change=\"search()\" ng-required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.id}}\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
     "\n" +

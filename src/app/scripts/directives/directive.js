@@ -13,22 +13,27 @@
      * @param {object} fs-options.address address field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.address2 address2 field options. If false - field not showing
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.city city field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.region region field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.zip zip field options
                 <ul>
                     <li><label>required</label> Required validation rule</li>
+                    <li><label>name</label> Name used to map to the address model</li>
                 </ul>
      * @param {object} fs-options.country country field options
                 <ul>
@@ -36,7 +41,7 @@
                 </ul>
      * @param {object} fs-address Data for showing. Possible fields:
                 <ul>
-                    <li>address1</li>
+                    <li>address</li>
                     <li>address2</li>
                     <li>city</li>
                     <li>country</li>
@@ -72,6 +77,7 @@
                                                         domestics: ['CA','US'],
                                                         map: true },$scope.options);
 
+
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
@@ -105,8 +111,12 @@
                         $scope.options[item] = {};
                     }
 
+                    if(!$scope.options[item].id) {
+                        $scope.options[item].id = 'input_' + fsUtil.guid();
+                    }
+
                     if(!$scope.options[item].name) {
-                        $scope.options[item].name = 'input_' + fsUtil.guid();
+                        $scope.options[item].name = item;
                     }
                 });
 
@@ -166,10 +176,12 @@
                 $scope.search = function() {
 
                     var geocoder = new google.maps.Geocoder();
-                    var address = $scope.address;
-                    var parts = [address.address,address.address2,address.city,address.region,address.zip];
-                    var country = $filter('filter')(COUNTRIES,{ code: address.country },true)[0];
-
+                    var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0];
+                    var parts = [	$scope.address[$scope.options.address.name],
+                    				$scope.address[$scope.options.address2.name],
+                    				$scope.address[$scope.options.city.name],
+                    				$scope.address[$scope.options.region.name],
+                    				$scope.address[$scope.options.zip.name]];
                     if(country) {
                         parts.push(country.name);
                     }
