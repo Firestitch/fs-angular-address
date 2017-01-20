@@ -247,6 +247,8 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\">\r" +
     "\n" +
+    "        <div class=\"hint\" ng-show=\"options.address2.show\">Street Address</div>\r" +
+    "\n" +
     "    </md-input-container>\r" +
     "\n" +
     "\r" +
@@ -256,6 +258,8 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "        <label>Address 2</label>\r" +
     "\n" +
     "        <input ng-model=\"address[options.address1.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\">\r" +
+    "\n" +
+    "        <div class=\"hint\">Appartment, suite, unit, building, floor, etc.</div>\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +

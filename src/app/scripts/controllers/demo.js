@@ -9,7 +9,7 @@
     $scope.options = { 	map: true,
     					//countries: ['CA','US'],
     					address: { required: true, name: 'address1' },
-    					address2: false,
+    					address2: { show: true },
     					city: { required: true },
     					region: { required: true },
     					zip: { required: true },
