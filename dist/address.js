@@ -62,6 +62,11 @@
               address: '=fsAddress'
             },
 
+            link: function($scope, element) {
+            	angular.forEach(element[0].querySelectorAll('input'),function(input) {
+            		angular.element(input).data('scope',$scope);
+            	});
+            },
             controller: function($scope, uiGmapIsReady) {
 
                 try {
@@ -231,7 +236,6 @@
         insertBefore.call(head, newElement, referenceElement);
     };
 })();
-
 
 angular.module('fs-angular-address').run(['$templateCache', function($templateCache) {
   'use strict';
