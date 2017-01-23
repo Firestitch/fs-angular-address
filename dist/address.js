@@ -257,7 +257,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.address1.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\">\r" +
+    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" ng-required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\">\r" +
     "\n" +
     "        <div class=\"hint\">Apartment, suite, unit, building, floor, etc.</div>\r" +
     "\n" +
