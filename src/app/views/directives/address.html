@@ -1,33 +1,33 @@
-{{options.names}}
 <div layout="row">
     <md-input-container flex>
         <label>Address</label>
-        <input ng-model="address[options.address.name]" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.address.required" ng-disabled="options.disabled" name="{{options.address.id}}">
+        <input ng-model="address[options.address.name]" ng-change="search()" ng-model-options="{debounce: 400}" required="options.address.required" ng-disabled="options.disabled" name="{{options.address.id}}" class="address-input">
         <div class="hint" ng-show="options.address2.show">Street Address</div>
     </md-input-container>
 
     <md-input-container flex ng-show="options.address2.show">
         <label>Address 2</label>
-        <input ng-model="address[options.address2.name]" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}">
+        <input ng-model="address[options.address2.name]" ng-change="search()" ng-model-options="{debounce: 400}" required="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
         <div class="hint">Apartment, suite, unit, building, floor, etc.</div>
     </md-input-container>
 </div>
+
 <div layout="row">
     <md-input-container flex>
         <label>City</label>
-        <input ng-model="address[options.city.name]" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.city.required"  ng-disabled="options.disabled" name="{{options.city.id}}">
+        <input ng-model="address[options.city.name]" ng-change="search()" ng-model-options="{debounce: 400}" required="options.city.required" ng-disabled="options.disabled" name="{{options.city.id}}" class="address-input">
     </md-input-container>
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
-        <input ng-model="address[options.zip.name]" ng-change="search()" ng-model-options="{debounce: 400}" ng-required="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}">
+        <input ng-model="address[options.zip.name]" ng-change="search()" ng-model-options="{debounce: 400}" required="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
     </md-input-container>
 </div>
 
 <div layout="row">
     <md-input-container flex="50">
         <label>Country</label>
-        <md-select ng-model="address[options.country.name]" ng-change="search()" ng-required="options.country.required" ng-disabled="options.disabled" name="{{options.country.id}}">
+        <md-select ng-model="address[options.country.name]" ng-change="search()" required="options.country.required" ng-disabled="options.disabled" name="{{options.country.id}}" class="address-input">
             <md-option ng-repeat="country in countries.domestic" value="{{country.code}}">
                 {{country.name}}
             </md-option>
@@ -41,7 +41,7 @@
 
     <md-input-container flex>
         <label>{{regionLabel}}</label>
-        <md-select ng-model="address[options.region.name]" ng-change="search()" ng-required="options.region.required" ng-disabled="options.disabled" name="{{options.region.id}}">
+        <md-select ng-model="address[options.region.name]" ng-change="search()" required="options.region.required" ng-disabled="options.disabled" name="{{options.region.id}}" class="address-input">
             <md-option ng-repeat="region in regions" value="{{region.code}}">
                 {{region.name}}
             </md-option>

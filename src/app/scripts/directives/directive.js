@@ -62,8 +62,8 @@
             },
 
             link: function($scope, element) {
-            	angular.forEach(element[0].querySelectorAll('input'),function(input) {
-            		angular.element(input).data('scope',$scope);
+            	angular.forEach(element[0].querySelectorAll('.address-input'),function(input) {
+            		angular.element(input).data('required-scope',$scope);
             	});
             },
             controller: function($scope, uiGmapIsReady) {
