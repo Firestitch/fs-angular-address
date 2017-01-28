@@ -307,7 +307,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "            </md-option>\r" +
     "\n" +
-    "            <md-optgroup label=\"International\" ng-show=\"countries.international\">\r" +
+    "            <md-optgroup label=\"International\" ng-show=\"countries.international.length\">\r" +
     "\n" +
     "\t            <md-option ng-repeat=\"country in countries.international\" value=\"{{country.code}}\">\r" +
     "\n" +

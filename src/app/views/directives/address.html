@@ -31,7 +31,7 @@
             <md-option ng-repeat="country in countries.domestic" value="{{country.code}}">
                 {{country.name}}
             </md-option>
-            <md-optgroup label="International" ng-show="countries.international">
+            <md-optgroup label="International" ng-show="countries.international.length">
 	            <md-option ng-repeat="country in countries.international" value="{{country.code}}">
 	                {{country.name}}
 	            </md-option>
