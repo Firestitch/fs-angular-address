@@ -247,7 +247,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\r" +
     "\n" +
     "        <div class=\"hint\" ng-show=\"options.address2.show\">Street Address</div>\r" +
     "\n" +
@@ -259,7 +259,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\r" +
     "\n" +
     "        <div class=\"hint\">Apartment, suite, unit, building, floor, etc.</div>\r" +
     "\n" +
@@ -275,7 +275,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>City</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -285,7 +285,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{zipLabel}}</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -299,7 +299,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Country</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address[options.country.name]\" ng-change=\"search()\" required=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.id}}\" class=\"address-input\">\r" +
+    "        <md-select ng-model=\"address[options.country.name]\" ng-change=\"search()\" required-condition=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.id}}\" class=\"address-input\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"country in countries.domestic\" value=\"{{country.code}}\">\r" +
     "\n" +
@@ -327,7 +327,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{regionLabel}}</label>\r" +
     "\n" +
-    "        <md-select ng-model=\"address[options.region.name]\" ng-change=\"search()\" required=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.id}}\" class=\"address-input\">\r" +
+    "        <md-select ng-model=\"address[options.region.name]\" ng-change=\"search()\" required-condition=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.id}}\" class=\"address-input\">\r" +
     "\n" +
     "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
     "\n" +
