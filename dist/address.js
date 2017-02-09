@@ -205,11 +205,13 @@
 
                            	control.refresh({ latitude: location.lat(), longitude: location.lng() });
 
-							var marker = $scope.marker.control.getGMarkers()[0];
-							if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
-	                            $scope.marker.coords.latitude = location.lat();
-    		                    $scope.marker.coords.longitude = location.lng();
-        		            }
+                           	if($scope.marker.control.getGMarkers) {
+								var marker = $scope.marker.control.getGMarkers()[0];
+								if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
+		                            $scope.marker.coords.latitude = location.lat();
+	    		                    $scope.marker.coords.longitude = location.lng();
+	        		            }
+	        		        }
                         }
                     });
                 }
