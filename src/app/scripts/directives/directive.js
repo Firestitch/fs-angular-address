@@ -96,7 +96,7 @@
                                                     streetViewControl: false,
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
                 $scope.marker = {   id: 0,
-                                    coords: { latitude: 0, longitude: $scope.address.lng },
+                                    coords: { latitude: $scope.address.lat, longitude: $scope.address.lng },
                                     options: { draggable: true },
                                 	control: {},
                                 	events: {

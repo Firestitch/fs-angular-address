@@ -97,7 +97,7 @@
                                                     streetViewControl: false,
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
                 $scope.marker = {   id: 0,
-                                    coords: { latitude: 0, longitude: $scope.address.lng },
+                                    coords: { latitude: $scope.address.lat, longitude: $scope.address.lng },
                                     options: { draggable: true },
                                 	control: {},
                                 	events: {
@@ -243,120 +243,63 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
   'use strict';
 
   $templateCache.put('views/directives/address.html',
-    "<div layout=\"row\">\r" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex>\n" +
+    "        <label>Address</label>\n" +
+    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\n" +
+    "        <div class=\"hint\" ng-show=\"options.address2.show\">Street Address</div>\n" +
+    "    </md-input-container>\n" +
     "\n" +
-    "    <md-input-container flex>\r" +
+    "    <md-input-container flex ng-show=\"options.address2.show\">\n" +
+    "        <label>Address 2</label>\n" +
+    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\n" +
+    "        <div class=\"hint\">Apartment, suite, unit, building, floor, etc.</div>\n" +
+    "    </md-input-container>\n" +
+    "</div>\n" +
     "\n" +
-    "        <label>Address</label>\r" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex>\n" +
+    "        <label>City</label>\n" +
+    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\n" +
+    "    </md-input-container>\n" +
     "\n" +
-    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\r" +
+    "    <md-input-container flex>\n" +
+    "        <label>{{zipLabel}}</label>\n" +
+    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\n" +
+    "    </md-input-container>\n" +
+    "</div>\n" +
     "\n" +
-    "        <div class=\"hint\" ng-show=\"options.address2.show\">Street Address</div>\r" +
+    "<div layout=\"row\">\n" +
+    "    <md-input-container flex=\"50\">\n" +
+    "        <label>Country</label>\n" +
+    "        <md-select ng-model=\"address[options.country.name]\" ng-change=\"search()\" required-condition=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.id}}\" class=\"address-input\">\n" +
+    "            <md-option ng-repeat=\"country in countries.domestic\" value=\"{{country.code}}\">\n" +
+    "                {{country.name}}\n" +
+    "            </md-option>\n" +
+    "            <md-optgroup label=\"International\" ng-show=\"countries.international.length\">\n" +
+    "\t            <md-option ng-repeat=\"country in countries.international\" value=\"{{country.code}}\">\n" +
+    "\t                {{country.name}}\n" +
+    "\t            </md-option>\n" +
+    "            </md-optgroup>\n" +
+    "        </md-select>\n" +
+    "    </md-input-container>\n" +
     "\n" +
-    "    </md-input-container>\r" +
+    "    <md-input-container flex>\n" +
+    "        <label>{{regionLabel}}</label>\n" +
+    "        <md-select ng-model=\"address[options.region.name]\" ng-change=\"search()\" required-condition=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.id}}\" class=\"address-input\">\n" +
+    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\n" +
+    "                {{region.name}}\n" +
+    "            </md-option>\n" +
+    "        </md-select>\n" +
+    "    </md-input-container>\n" +
+    "</div>\n" +
     "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex ng-show=\"options.address2.show\">\r" +
-    "\n" +
-    "        <label>Address 2</label>\r" +
-    "\n" +
-    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\r" +
-    "\n" +
-    "        <div class=\"hint\">Apartment, suite, unit, building, floor, etc.</div>\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "<div layout=\"row\">\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>City</label>\r" +
-    "\n" +
-    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>{{zipLabel}}</label>\r" +
-    "\n" +
-    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "<div layout=\"row\">\r" +
-    "\n" +
-    "    <md-input-container flex=\"50\">\r" +
-    "\n" +
-    "        <label>Country</label>\r" +
-    "\n" +
-    "        <md-select ng-model=\"address[options.country.name]\" ng-change=\"search()\" required-condition=\"options.country.required\" ng-disabled=\"options.disabled\" name=\"{{options.country.id}}\" class=\"address-input\">\r" +
-    "\n" +
-    "            <md-option ng-repeat=\"country in countries.domestic\" value=\"{{country.code}}\">\r" +
-    "\n" +
-    "                {{country.name}}\r" +
-    "\n" +
-    "            </md-option>\r" +
-    "\n" +
-    "            <md-optgroup label=\"International\" ng-show=\"countries.international.length\">\r" +
-    "\n" +
-    "\t            <md-option ng-repeat=\"country in countries.international\" value=\"{{country.code}}\">\r" +
-    "\n" +
-    "\t                {{country.name}}\r" +
-    "\n" +
-    "\t            </md-option>\r" +
-    "\n" +
-    "            </md-optgroup>\r" +
-    "\n" +
-    "        </md-select>\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    <md-input-container flex>\r" +
-    "\n" +
-    "        <label>{{regionLabel}}</label>\r" +
-    "\n" +
-    "        <md-select ng-model=\"address[options.region.name]\" ng-change=\"search()\" required-condition=\"options.region.required\" ng-disabled=\"options.disabled\" name=\"{{options.region.id}}\" class=\"address-input\">\r" +
-    "\n" +
-    "            <md-option ng-repeat=\"region in regions\" value=\"{{region.code}}\">\r" +
-    "\n" +
-    "                {{region.name}}\r" +
-    "\n" +
-    "            </md-option>\r" +
-    "\n" +
-    "        </md-select>\r" +
-    "\n" +
-    "    </md-input-container>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "<div class=\"map-container\" ng-show=\"options.map\">\r" +
-    "\n" +
-    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"recenter()\" ng-show=\"center\">Center Map using Address</md-button>\r" +
-    "\n" +
-    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\r" +
-    "\n" +
-    "    \t<ui-gmap-marker idKey=\"marker.id\" coords=\"marker.coords\" options=\"marker.options\" control=\"marker.control\" events=\"marker.events\"></ui-gmap-marker>\r" +
-    "\n" +
-    "    </ui-gmap-google-map>\r" +
-    "\n" +
-    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\r" +
-    "\n" +
+    "<div class=\"map-container\" ng-show=\"options.map\">\n" +
+    "    <md-button class=\"center\"ng-show=\"address.lat && address.lng\" ng-click=\"recenter()\" ng-show=\"center\">Center Map using Address</md-button>\n" +
+    "    <ui-gmap-google-map center=\"map.center\" zoom=\"13\" options=\"mapOptions\" control=\"map.control\" events=\"mapOptions.events\">\n" +
+    "    \t<ui-gmap-marker idKey=\"marker.id\" coords=\"marker.coords\" options=\"marker.options\" control=\"marker.control\" events=\"marker.events\"></ui-gmap-marker>\n" +
+    "    </ui-gmap-google-map>\n" +
+    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\n" +
     "</div>"
   );
 
