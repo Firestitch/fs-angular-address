@@ -86,18 +86,20 @@
 
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
+                $scope.searchedAddress = '';
                 $scope.regions = [];
                 $scope.countries = { 	domestic: [],
                 						international: [] };
                 $scope.zipLabel = '';
                 $scope.regionLabel = '';
                 $scope.center = null;
+                $scope.searched = false;
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false,
                                                     streetViewControl: false,
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
                 $scope.marker = {   id: 0,
-                                    coords: { latitude: 0, longitude: $scope.address.lng },
+                                    coords: { latitude: $scope.address.lat, longitude: $scope.address.lng },
                                     options: { draggable: true },
                                 	control: {},
                                 	events: {
@@ -192,27 +194,37 @@
                         parts.push(country.name);
                     }
 
-                    geocoder.geocode( { 'address': parts.join(' ,')  }, function(results, status) {
+                    parts = parts.filter(function(value){ return fsUtil.string(value).trim() });
 
-                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
-                            var location = results[0].geometry.location;
-                            var control = $scope.map.control;
+                    $scope.searchedAddress = parts.join(', ');
+                    geocoder.geocode( { 'address': $scope.searchedAddress  }, function(results, status) {
 
-                            $scope.address.lat = location.lat();
-                            $scope.address.lng = location.lng();
+                    	$scope.$apply(function() {
+                    		$scope.searched = true;
 
-                            $scope.center = { lat: location.lat(), lng: location.lng() };
+	                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
+	                            var location = results[0].geometry.location;
+	                            var control = $scope.map.control;
 
-                           	control.refresh({ latitude: location.lat(), longitude: location.lng() });
+	                            $scope.address.lat = location.lat();
+	                            $scope.address.lng = location.lng();
 
-                           	if($scope.marker.control.getGMarkers) {
-								var marker = $scope.marker.control.getGMarkers()[0];
-								if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
-		                            $scope.marker.coords.latitude = location.lat();
-	    		                    $scope.marker.coords.longitude = location.lng();
-	        		            }
-	        		        }
-                        }
+	                            $scope.center = { lat: location.lat(), lng: location.lng() };
+
+	                           	control.refresh({ latitude: location.lat(), longitude: location.lng() });
+
+	                           	if($scope.marker.control.getGMarkers) {
+									var marker = $scope.marker.control.getGMarkers()[0];
+									if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
+			                            $scope.marker.coords.latitude = location.lat();
+		    		                    $scope.marker.coords.longitude = location.lng();
+		        		            }
+		        		        }
+	                        } else {
+	                        	$scope.address.lat = null;
+	                        	$scope.address.lng = null;
+	                        }
+	                    });
                     });
                 }
 
@@ -249,7 +261,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.address.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 500}\" required-condition=\"options.address.required\" ng-disabled=\"options.disabled\" name=\"{{options.address.id}}\" class=\"address-input\">\r" +
     "\n" +
     "        <div class=\"hint\" ng-show=\"options.address2.show\">Street Address</div>\r" +
     "\n" +
@@ -261,7 +273,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>Address 2</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.address2.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 500}\" required-condition=\"options.address2.required\" ng-disabled=\"options.disabled\" name=\"{{options.address2.id}}\" class=\"address-input\">\r" +
     "\n" +
     "        <div class=\"hint\">Apartment, suite, unit, building, floor, etc.</div>\r" +
     "\n" +
@@ -277,7 +289,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>City</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.city.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 500}\" required-condition=\"options.city.required\" ng-disabled=\"options.disabled\" name=\"{{options.city.id}}\" class=\"address-input\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -287,7 +299,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "        <label>{{zipLabel}}</label>\r" +
     "\n" +
-    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 400}\" required-condition=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\r" +
+    "        <input ng-model=\"address[options.zip.name]\" ng-change=\"search()\" ng-model-options=\"{debounce: 500}\" required-condition=\"options.zip.required\" ng-disabled=\"options.disabled\" name=\"{{options.zip.id}}\" class=\"address-input\">\r" +
     "\n" +
     "    </md-input-container>\r" +
     "\n" +
@@ -355,7 +367,13 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
     "\n" +
     "    </ui-gmap-google-map>\r" +
     "\n" +
-    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-hide=\"address.lat && address.lng\"><div>Please populate the address above to locate it on the map</div></div>\r" +
+    "    <div class=\"address-incomplete\" layout=\"row\" layout-align=\"center center\" ng-show=\"!address.lat && !address.lng\">\r" +
+    "\n" +
+    "    \t<div ng-show=\"!searched\">Please populate the address above to locate it on the map</div>\r" +
+    "\n" +
+    "    \t<div ng-show=\"searched\">Could not find address \"{{searchedAddress}}\"</div>\r" +
+    "\n" +
+    "    </div>\r" +
     "\n" +
     "</div>"
   );

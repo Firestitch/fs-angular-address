@@ -85,18 +85,20 @@
 
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
+                $scope.searchedAddress = '';
                 $scope.regions = [];
                 $scope.countries = { 	domestic: [],
                 						international: [] };
                 $scope.zipLabel = '';
                 $scope.regionLabel = '';
                 $scope.center = null;
+                $scope.searched = false;
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false,
                                                     streetViewControl: false,
                                                     mapTypeControlOptions: { mapTypeIds: [] }},$scope.mapOptions || {});
                 $scope.marker = {   id: 0,
-                                    coords: { latitude: 0, longitude: $scope.address.lng },
+                                    coords: { latitude: $scope.address.lat, longitude: $scope.address.lng },
                                     options: { draggable: true },
                                 	control: {},
                                 	events: {
@@ -191,27 +193,37 @@
                         parts.push(country.name);
                     }
 
-                    geocoder.geocode( { 'address': parts.join(' ,')  }, function(results, status) {
+                    parts = parts.filter(function(value){ return fsUtil.string(value).trim() });
 
-                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
-                            var location = results[0].geometry.location;
-                            var control = $scope.map.control;
+                    $scope.searchedAddress = parts.join(', ');
+                    geocoder.geocode( { 'address': $scope.searchedAddress  }, function(results, status) {
 
-                            $scope.address.lat = location.lat();
-                            $scope.address.lng = location.lng();
+                    	$scope.$apply(function() {
+                    		$scope.searched = true;
 
-                            $scope.center = { lat: location.lat(), lng: location.lng() };
+	                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
+	                            var location = results[0].geometry.location;
+	                            var control = $scope.map.control;
 
-                           	control.refresh({ latitude: location.lat(), longitude: location.lng() });
+	                            $scope.address.lat = location.lat();
+	                            $scope.address.lng = location.lng();
 
-                           	if($scope.marker.control.getGMarkers) {
-								var marker = $scope.marker.control.getGMarkers()[0];
-								if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
-		                            $scope.marker.coords.latitude = location.lat();
-	    		                    $scope.marker.coords.longitude = location.lng();
-	        		            }
-	        		        }
-                        }
+	                            $scope.center = { lat: location.lat(), lng: location.lng() };
+
+	                           	control.refresh({ latitude: location.lat(), longitude: location.lng() });
+
+	                           	if($scope.marker.control.getGMarkers) {
+									var marker = $scope.marker.control.getGMarkers()[0];
+									if(control.getGMap().getBounds().contains(marker.getPosition())!==true) {
+			                            $scope.marker.coords.latitude = location.lat();
+		    		                    $scope.marker.coords.longitude = location.lng();
+		        		            }
+		        		        }
+	                        } else {
+	                        	$scope.address.lat = null;
+	                        	$scope.address.lng = null;
+	                        }
+	                    });
                     });
                 }
 

@@ -4,7 +4,7 @@
 angular.module('app')
   .controller('DemoCtrl', function ($scope) {
 
-    //$scope.address = { lat: 43.9754689, lng: 4.3423691 };
+    $scope.address = { lat: 43.9754689, lng: 4.3423691 };
     $scope.address = {};
     $scope.options1 = { 	map: true,
     					countries: ['CA','US'],
@@ -13,7 +13,8 @@
     					city: { required: true },
     					region: { required: true },
     					zip: { required: true },
-    					country: { required: true }
+    					country: { required: true },
+
     					 };
 
     $scope.submit = function() {

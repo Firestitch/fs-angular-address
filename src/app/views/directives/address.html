@@ -1,13 +1,13 @@
 <div layout="row">
     <md-input-container flex>
         <label>Address</label>
-        <input ng-model="address[options.address.name]" ng-change="search()" ng-model-options="{debounce: 400}" required-condition="options.address.required" ng-disabled="options.disabled" name="{{options.address.id}}" class="address-input">
+        <input ng-model="address[options.address.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.address.required" ng-disabled="options.disabled" name="{{options.address.id}}" class="address-input">
         <div class="hint" ng-show="options.address2.show">Street Address</div>
     </md-input-container>
 
     <md-input-container flex ng-show="options.address2.show">
         <label>Address 2</label>
-        <input ng-model="address[options.address2.name]" ng-change="search()" ng-model-options="{debounce: 400}" required-condition="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
+        <input ng-model="address[options.address2.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
         <div class="hint">Apartment, suite, unit, building, floor, etc.</div>
     </md-input-container>
 </div>
@@ -15,12 +15,12 @@
 <div layout="row">
     <md-input-container flex>
         <label>City</label>
-        <input ng-model="address[options.city.name]" ng-change="search()" ng-model-options="{debounce: 400}" required-condition="options.city.required" ng-disabled="options.disabled" name="{{options.city.id}}" class="address-input">
+        <input ng-model="address[options.city.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.city.required" ng-disabled="options.disabled" name="{{options.city.id}}" class="address-input">
     </md-input-container>
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
-        <input ng-model="address[options.zip.name]" ng-change="search()" ng-model-options="{debounce: 400}" required-condition="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
+        <input ng-model="address[options.zip.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
     </md-input-container>
 </div>
 
@@ -54,5 +54,8 @@
     <ui-gmap-google-map center="map.center" zoom="13" options="mapOptions" control="map.control" events="mapOptions.events">
     	<ui-gmap-marker idKey="marker.id" coords="marker.coords" options="marker.options" control="marker.control" events="marker.events"></ui-gmap-marker>
     </ui-gmap-google-map>
-    <div class="address-incomplete" layout="row" layout-align="center center" ng-hide="address.lat && address.lng"><div>Please populate the address above to locate it on the map</div></div>
+    <div class="address-incomplete" layout="row" layout-align="center center" ng-show="!address.lat && !address.lng">
+    	<div ng-show="!searched">Please populate the address above to locate it on the map</div>
+    	<div ng-show="searched">Could not find address "{{searchedAddress}}"</div>
+    </div>
 </div>
