@@ -86,7 +86,6 @@
 
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
-                $scope.searchedAddress = '';
                 $scope.regions = [];
                 $scope.countries = { 	domestic: [],
                 						international: [] };
@@ -94,6 +93,9 @@
                 $scope.regionLabel = '';
                 $scope.center = null;
                 $scope.searched = false;
+                $scope.searchedAddress = '';
+                $scope.recenter = recenter;
+                $scope.search = search;
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false,
                                                     streetViewControl: false,
@@ -164,6 +166,16 @@
                     $scope.address.country = $scope.countries.domestic[0].code;
                 }
 
+                if(	$scope.address[$scope.options.address.name] ||
+                    $scope.address[$scope.options.address2.name] ||
+                    $scope.address[$scope.options.city.name] ||
+                    $scope.address[$scope.options.region.name] ||
+                    $scope.address[$scope.options.zip.name]) {
+                		$scope.address.lat = 9999;
+                		$scope.address.lng = 9999;
+                		search();
+                }
+
                 $scope.$watch('address.country',function(country) {
                     var country = $filter('filter')(COUNTRIES,{ code: country },true)[0];
                     $scope.regions = country ? country.regions : [];
@@ -171,7 +183,7 @@
                     $scope.regionLabel = country && country.code=='CA' ? 'Province' : 'State';
                 });
 
-                $scope.recenter = function() {
+               	function recenter() {
 
                 	if($scope.center) {
 	                	$scope.map.control.refresh({ latitude: $scope.center.lat, longitude: $scope.center.lng });
@@ -181,18 +193,15 @@
 		            }
                 }
 
-                $scope.search = function() {
-
+                function search() {
                     var geocoder = new google.maps.Geocoder();
                     var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0];
                     var parts = [	$scope.address[$scope.options.address.name],
                     				$scope.address[$scope.options.address2.name],
                     				$scope.address[$scope.options.city.name],
                     				$scope.address[$scope.options.region.name],
-                    				$scope.address[$scope.options.zip.name]];
-                    if(country) {
-                        parts.push(country.name);
-                    }
+                    				$scope.address[$scope.options.zip.name],
+                    				country.name];
 
                     parts = parts.filter(function(value){ return fsUtil.string(value).trim() });
 
@@ -201,7 +210,6 @@
 
                     	$scope.$apply(function() {
                     		$scope.searched = true;
-
 	                        if(status == google.maps.GeocoderStatus.OK && results.length > 0) {
 	                            var location = results[0].geometry.location;
 	                            var control = $scope.map.control;
@@ -243,7 +251,6 @@
     // Replace it!
     head.insertBefore = function (newElement, referenceElement) {
         if (newElement.href && newElement.href.indexOf('https://fonts.googleapis.com/css?family=Roboto') === 0) {
-            console.info('Prevented Roboto from loading!');
             return;
         }
 
