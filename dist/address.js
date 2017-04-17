@@ -247,7 +247,18 @@
                 });
             }
         };
-    });
+    })
+    .directive('fsAddressFormat', function(COUNTRIES, $filter, uiGmapIsReady, $q, fsUtil, fsArray) {
+        return {
+            templateUrl: 'views/directives/addressformat.html',
+            restrict: 'E',
+            scope: {
+              address: '=fsAddress'
+            },
+            controller: function($scope, uiGmapIsReady) {
+
+           	}
+    }});
 
     var head = document.getElementsByTagName('head')[0];
     // Save the original method
