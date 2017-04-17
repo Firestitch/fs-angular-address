@@ -112,21 +112,25 @@
 
                 angular.forEach(['address','address2','city','region','country','zip'],function(item) {
 
-                    if($scope.options[item]===false) {
-                        $scope.options[item] = { show: false };
+                	var option = $scope.options[item];
+
+                    if(fsUtil.isBoolean(option)) {
+                        option = { show: $scope.options[item] };
                     }
 
-                    if($scope.options[item]===undefined) {
-                        $scope.options[item] = {};
+                    if(!fsUtil.isObject($scope.options[item])) {
+                        option = {};
                     }
 
-                    if(!$scope.options[item].id) {
-                        $scope.options[item].id = 'input_' + fsUtil.guid();
+                    if(!option.id) {
+                        option.id = 'input_' + fsUtil.guid();
                     }
 
-                    if(!$scope.options[item].name) {
-                        $scope.options[item].name = item;
+                    if(!option.name) {
+                        option.name = item;
                     }
+
+                    $scope.options[item] = option;
                 });
 
                 var countries = [];
