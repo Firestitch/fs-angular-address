@@ -9,6 +9,7 @@
     "fs-angular-country": "^1.0.0",
     "fs-angular-util": "^1.0.0",
     "fs-angular-array": "^1.0.0",
+    "fs-google-maps-stub": "^1.0.0",
     "angular-google-maps": "^2.3.2"
   },
   "authors": [
