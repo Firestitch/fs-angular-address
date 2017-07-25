@@ -198,7 +198,7 @@
 
                 function search() {
                     var geocoder = new google.maps.Geocoder();
-                    var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0];
+                    var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0] || {};
                     var parts = [	$scope.address[$scope.options.address.name],
                     				$scope.address[$scope.options.address2.name],
                     				$scope.address[$scope.options.city.name],
