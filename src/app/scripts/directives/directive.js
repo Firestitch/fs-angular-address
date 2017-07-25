@@ -252,10 +252,24 @@
             templateUrl: 'views/directives/addressformat.html',
             restrict: 'E',
             scope: {
-              address: '=fsAddress'
+              address: '=fsAddress',
+              options: '=?fsOptions'
             },
-            controller: function($scope, uiGmapIsReady) {
+            controller: function($scope) {
 
+            	$scope.$watch('options',function(options) {
+            		options = options || {}
+	                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
+
+	       				if(!fsUtil.isObject(options[item])) {
+	                        options[item] = {};
+	                    }
+
+	                    if(!options[item].name) {
+	                        options[item].name = item;
+	                    }
+	                });
+	            });
            	}
     }});
 
