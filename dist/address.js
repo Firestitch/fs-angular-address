@@ -282,7 +282,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
 
 
   $templateCache.put('views/directives/addressformat.html',
-    "<span class=\"address1\">{{address.address1}}</span><span class=\"address2\" ng-show=\"address.address2\">, {{address.address2}}</span><span class=\"city\" ng-show=\"address.city\">, {{address.city}}</span><span class=\"region\" ng-show=\"address.region\">, {{address.region}}</span><span class=\"zip\" ng-show=\"address.zip\">, {{address.zip}}</span><span class=\"country\" ng-show=\"address.country\">, {{address.country}}</span>"
+    "<span class=\"address\">{{address.address}}</span><span class=\"address2\" ng-show=\"address.address2\">, {{address.address2}}</span><span class=\"city\" ng-show=\"address.city\">, {{address.city}}</span><span class=\"region\" ng-show=\"address.region\">, {{address.region}}</span><span class=\"zip\" ng-show=\"address.zip\">, {{address.zip}}</span><span class=\"country\" ng-show=\"address.country\">, {{address.country}}</span>"
   );
 
 }]);
