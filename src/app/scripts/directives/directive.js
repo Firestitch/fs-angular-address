@@ -258,15 +258,15 @@
             controller: function($scope) {
 
             	$scope.$watch('options',function(options) {
-            		options = options || {}
+            		$scope.options = options || {}
 	                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
 
 	       				if(!fsUtil.isObject(options[item])) {
-	                        options[item] = {};
+	                        $scope.options[item] = {};
 	                    }
 
 	                    if(!options[item].name) {
-	                        options[item].name = item;
+	                        $scope.options[item].name = item;
 	                    }
 	                });
 	            });

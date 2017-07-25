@@ -259,15 +259,15 @@
             controller: function($scope) {
 
             	$scope.$watch('options',function(options) {
-            		options = options || {}
+            		$scope.options = options || {}
 	                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
 
 	       				if(!fsUtil.isObject(options[item])) {
-	                        options[item] = {};
+	                        $scope.options[item] = {};
 	                    }
 
 	                    if(!options[item].name) {
-	                        options[item].name = item;
+	                        $scope.options[item].name = item;
 	                    }
 	                });
 	            });
@@ -296,7 +296,7 @@ angular.module('fs-angular-address').run(['$templateCache', function($templateCa
 
 
   $templateCache.put('views/directives/addressformat.html',
-    "<span class=\"address\">{{address[options.address.name]}}</span><span class=\"address2\" ng-show=\"address.address2\">, {{address[options.address2.name]}}</span><span class=\"city\" ng-show=\"address.city\">, {{address[options.city.name]}}</span><span class=\"region\" ng-show=\"address.region\">, {{address[options.region.name]}}</span><span class=\"zip\" ng-show=\"address.zip\">, {{address[options.zip.name]}}</span><span class=\"country\" ng-show=\"address.country\">, {{address[options.country.name]}}</span>"
+    "<span class=\"address\">{{address[options.address.name]}}</span><span class=\"address2\" ng-show=\"address.address2\">, {{address[options.address2.name]}}</span><span class=\"city\" ng-show=\"address.city\">, {{address[options.city.name]}}</span><span class=\"region\" ng-show=\"address.region\">, {{address[options.region.name]}}</span><span class=\"zip\" ng-show=\"address.zip\">, {{address[options.zip.name]}}</span><span class=\"country\" ng-show=\"address.country\">, {{address[options.country.name]}}</span> {{options}}"
   );
 
 }]);
