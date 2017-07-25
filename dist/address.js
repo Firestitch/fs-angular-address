@@ -262,11 +262,11 @@
             		$scope.options = options || {}
 	                angular.forEach(['address','address2','city','region','country','zip'],function(item) {
 
-	       				if(!fsUtil.isObject(options[item])) {
+	       				if(!fsUtil.isObject($scope.options[item])) {
 	                        $scope.options[item] = {};
 	                    }
 
-	                    if(!options[item].name) {
+	                    if(!$scope.options[item].name) {
 	                        $scope.options[item].name = item;
 	                    }
 	                });
