@@ -7,7 +7,7 @@
 
     <md-input-container flex ng-show="options.address2.show">
         <label>Address 2</label>
-        <input ng-model="address[options.address2.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
+        <input ng-model="address[options.address2.name]" required-condition="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
         <div class="hint">Apartment, suite, unit, building, floor, etc.</div>
     </md-input-container>
 </div>
@@ -20,7 +20,7 @@
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
-        <input ng-model="address[options.zip.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
+        <input ng-model="address[options.zip.name]" required-condition="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
     </md-input-container>
 </div>
 

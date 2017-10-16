@@ -82,7 +82,7 @@
                                                         domestics: ['CA','US'],
                                                         map: true },$scope.options);
 
-
+                $scope.address = $scope.address || {};
                 $scope.address.lat = $scope.address.lat || '';
                 $scope.address.lng = $scope.address.lng || '';
                 $scope.regions = [];
@@ -200,10 +200,8 @@
                     var geocoder = new google.maps.Geocoder();
                     var country = $filter('filter')(COUNTRIES,{ code: $scope.address.country },true)[0] || {};
                     var parts = [	$scope.address[$scope.options.address.name],
-                    				$scope.address[$scope.options.address2.name],
                     				$scope.address[$scope.options.city.name],
                     				$scope.address[$scope.options.region.name],
-                    				$scope.address[$scope.options.zip.name],
                     				country.name];
 
                     parts = parts.filter(function(value){ return fsUtil.string(value).trim() });

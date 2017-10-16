@@ -5,7 +5,7 @@
   .controller('DemoCtrl', function ($scope) {
 
     //$scope.address = { lat: 43.9754689, lng: 4.3423691 };
-    $scope.address = { address1: '151' };
+    $scope.address = { address1: '348 Wellington St W', city: 'Toronto',country: 'CA', region: 'ON', zip: 'M3M 1W3' };
     //$scope.address = {  };
     $scope.options1 = { 	map: true,
     					countries: ['CA','US'],
