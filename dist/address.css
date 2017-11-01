@@ -31,3 +31,11 @@ fs-address .map-container .center {
     z-index: 46;
     background-color: #fff;    
 }
+
+fs-address-format span::after {
+    content: ", ";
+}
+
+fs-address-format span:last-child:after {
+    content: "";
+}
