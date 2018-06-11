@@ -9,7 +9,7 @@
     "angular": "1.6.0",
     "angular-material": "1.1.1",
     "angular-ui-router": "0.3.2",
-    "fs-angular-country": "^1.0.0",
+    "fs-angular-country": "^1.0.4",
     "fs-angular-util": "^1.0.0",
     "fs-angular-array": "^1.0.0",
     "fs-angular-validate": "^1.0.0",
