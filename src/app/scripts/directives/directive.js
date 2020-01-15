@@ -95,6 +95,7 @@
                 $scope.searchedAddress = '';
                 $scope.recenter = recenter;
                 $scope.search = search;
+                $scope.changeCountry = changeCountry;
                 $scope.map = { center: { latitude: $scope.address.lat || $scope.options.cords.lat, longitude: $scope.address.lng || $scope.options.cords.lng }, zoom: 14, control:{} };
                 $scope.mapOptions = angular.merge({ scrollwheel: false,
                                                     streetViewControl: false,
@@ -194,6 +195,11 @@
 		                $scope.marker.coords.latitude = $scope.center.lat;
 		                $scope.marker.coords.longitude = $scope.center.lng;
 		            }
+                }
+
+                function changeCountry() {
+                    $scope.address[$scope.options.region.name] = null;
+                    search();
                 }
 
                 function search() {
