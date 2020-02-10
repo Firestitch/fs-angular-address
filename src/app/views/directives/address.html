@@ -39,18 +39,18 @@
         </md-select>
     </md-input-container>
 
-    <md-input-container ng-if="regions.length" flex>
+    <md-input-container ng-show="regions.length" flex>
         <label>{{regionLabel}}</label>
-        <md-select ng-model="address[options.region.name]" ng-change="search()" required-condition="options.region.required" ng-disabled="options.disabled" name="{{options.region.id}}" class="address-input">
+        <md-select ng-model="address[options.region.name]" ng-change="search()" required-condition="options.region.required" ng-disabled="options.disabled" name="region_select_{{options.region.id}}" class="address-input">
             <md-option ng-repeat="region in regions" value="{{region.code}}">
                 {{region.name}}
             </md-option>
         </md-select>
     </md-input-container>
 
-    <md-input-container ng-if="!regions.length" flex>
+    <md-input-container ng-show="!regions.length" flex>
         <label>{{regionLabel}}</label>
-        <input ng-model="address[options.region.name]" ng-change="search()" required-condition="options.region.required" ng-disabled="options.disabled" name="{{options.region.id}}" class="address-input">
+        <input ng-model="address[options.region.name]" ng-change="search()" required-condition="options.region.required" ng-disabled="options.disabled" name="region_input_{{options.region.id}}" class="address-input">
     </md-input-container>
 </div>
 
