@@ -17,20 +17,39 @@ angular.module('app')
 
     					// countries: ['CA','US'],
 
-    					address: { required: true, name: 'address1' },
+      address: {
+        required: true,
+        name: 'address1',
+        //hint: 'Hint: Address',
+      },
 
-    					address2: { show: true },
+      address2: {
+        //hint: 'Hint: Address2',
+        show: true
+      },
 
-    					city: { required: true },
+      city: {
+        required: true,
+        //hint: 'Hint: City',
+      },
 
-    					region: { required: true },
+      region: {
+        required: true,
+        //hint: 'Hint: Region',
+      },
 
-    					zip: { required: true },
+      zip: {
+        required: true,
+        //hint: 'Hint: Zip',
+      },
 
-    					country: { required: true },
+      country: {
+        required: true,
+        //hint: 'Hint: Country',
+      },
 
 
-    					 };
+    };
 
 
     $scope.submit = function() {

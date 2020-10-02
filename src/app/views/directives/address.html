@@ -2,13 +2,13 @@
     <md-input-container flex>
         <label>Address</label>
         <input ng-model="address[options.address.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.address.required" ng-disabled="options.disabled" name="{{options.address.id}}" class="address-input">
-        <div class="hint" ng-show="options.address2.show">Street Address</div>
+        <div class="hint" ng-show="options.address.hint">{{options.address.hint}}</div>
     </md-input-container>
 
     <md-input-container flex ng-show="options.address2.show">
         <label>Address 2</label>
         <input ng-model="address[options.address2.name]" required-condition="options.address2.required" ng-disabled="options.disabled" name="{{options.address2.id}}" class="address-input">
-        <div class="hint">Apartment, suite, unit, building, floor, etc.</div>
+        <div class="hint" ng-show="options.address2.hint">{{options.address2.hint}}</div>
     </md-input-container>
 </div>
 
@@ -16,11 +16,13 @@
     <md-input-container flex>
         <label>City</label>
         <input ng-model="address[options.city.name]" ng-change="search()" ng-model-options="{debounce: 500}" required-condition="options.city.required" ng-disabled="options.disabled" name="{{options.city.id}}" class="address-input">
+        <div class="hint" ng-show="options.city.hint">{{options.city.hint}}</div>
     </md-input-container>
 
     <md-input-container flex>
         <label>{{zipLabel}}</label>
         <input ng-model="address[options.zip.name]" required-condition="options.zip.required" ng-disabled="options.disabled" name="{{options.zip.id}}" class="address-input">
+        <div class="hint" ng-show="options.zip.hint">{{options.zip.hint}}</div>
     </md-input-container>
 </div>
 
@@ -37,6 +39,7 @@
 	            </md-option>
             </md-optgroup>
         </md-select>
+        <div class="hint" ng-show="options.country.hint">{{options.country.hint}}</div>
     </md-input-container>
 
     <md-input-container ng-show="regions.length" flex>
@@ -46,11 +49,13 @@
                 {{region.name}}
             </md-option>
         </md-select>
+        <div class="hint" ng-show="options.region.hint">{{options.region.hint}}</div>
     </md-input-container>
 
     <md-input-container ng-show="!regions.length" flex>
         <label>{{regionLabel}}</label>
         <input ng-model="address[options.region.name]" ng-change="search()" required-condition="options.region.required" ng-disabled="options.disabled" name="region_input_{{options.region.id}}" class="address-input">
+        <div class="hint" ng-show="options.region.hint">{{options.region.hint}}</div>
     </md-input-container>
 </div>
 

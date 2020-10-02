@@ -75,12 +75,23 @@
                 }
 
                 $scope.options = $scope.options || {};
-                $scope.options = angular.extend({},{    cords: {    lat: 43.6379967,
-                                                                    lng: -79.3819992 },
-                                                        address2: true,
-                                                        disabled: false,
-                                                        domestics: ['CA','US'],
-                                                        map: true },$scope.options);
+              $scope.options = angular.extend({}, {
+                  cords: {
+                    lat: 43.6379967,
+                    lng: -79.3819992
+                },
+                disabled: false,
+                domestics: ['CA','US'],
+                map: true
+              }, $scope.options);
+
+
+
+              if ($scope.options.address !==false && $scope.options.address.hint === undefined)
+                $scope.options.address.hint = 'Street Address';
+
+              if ($scope.options.address2 !== false && $scope.options.address2.hint === undefined)
+                $scope.options.address2.hint = 'Apartment, suite, unit, building, floor, etc.';
 
                 $scope.address = $scope.address || {};
                 $scope.address.lat = $scope.address.lat || '';
